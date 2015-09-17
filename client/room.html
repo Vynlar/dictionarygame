@@ -1,8 +1,10 @@
 <body>
   {{> loginButtons}}
+  {{> winner}}
   {{#if currentUser}}
     {{> defList}}
     {{> defForm}}
+    {{> judgeButton}}
   {{/if}}
   {{> createRoom}}
 </body>

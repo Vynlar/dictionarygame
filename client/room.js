@@ -1,5 +1,9 @@
 Meteor.subscribe("rooms");
 
+Accounts.ui.config({
+  passwordSignupFields: "USERNAME_ONLY"
+});
+
 Meteor.startup(function() {
   Session.set("roomId", "");
   if(location.hash != "" && location.hash != "#")
@@ -8,8 +12,8 @@ Meteor.startup(function() {
 
 Template.defList.helpers({
   definitions: function() {
-    if(Session.get("roomId") != "")
-      return Room.findOne({_id: Session.get("roomId")}).definitions
+    if(Session.get("roomId") != null)
+      return Room.findOne({_id: Session.get("roomId")}).definitions;
     else
       return [];
   }
@@ -23,6 +27,41 @@ Template.defForm.events({
     Meteor.call("addDefinition", definition, Session.get("roomId"));
 
     e.target.definition.value = "";
+  }
+});
+
+Template.judgeButton.events({
+  'click .judgeButton': function(e) {
+    Meteor.call("judgeGame", Session.get("roomId"), function(error, winner) {
+      if(error) return console.log(error.message);
+      if(winner != null) {
+        Session.set("winner", winner.username);
+        Meteor.setTimeout(function() {
+          Session.set("winner", null);
+          Meteor.call("clearRoom", Session.get("roomId"));
+        }, 4000);
+      }
+    });
+  }
+});
+
+Template.judgeButton.helpers({
+  room: function() {
+    console.log(Session.get("roomId"));
+    if(Session.get("roomId") == "")
+      return false;
+    else
+      return true;
+  }
+});
+
+Template.winner.helpers({
+  winner: function() {
+    return Session.get("winner");
+  },
+  exists: function(a) {
+    if(typeof a !== 'undefined' && a != null) return true;
+    else return false;
   }
 });
 
