@@ -77,11 +77,11 @@ Meteor.methods({
       var def = room.definitions[i];
       for(var j = 0; j < def.votes.length; j++) {
         var user = def.votes[i];
-        if(username == user) {
+        if(Meteor.user().username == user) {
           return;
         }
       }
     }
-    Room.update({_id: roomId, "definitions.username": username},{$push: {"definitions.$.votes": username}});
+    Room.update({_id: roomId, "definitions.username": username},{$push: {"definitions.$.votes": Meteor.user().username}});
   }
 });
