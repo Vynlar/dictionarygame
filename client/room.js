@@ -26,6 +26,15 @@ Template.word.helpers({
   }
 });
 
+Template.playerList.helpers({
+  players: function() {
+    var room = Room.findOne({_id: Session.get("roomId")});
+    if(room) {
+      return room.players;
+    }
+  }
+});
+
 Template.defList.events({
   "click .voteButton": function(def) {
     var username = def.target.parentElement.getElementsByTagName("span")[0].id;
@@ -51,6 +60,14 @@ Template.defList.helpers({
       return "";
     else
       return "hidden";
+  },
+  notCurrentUser: function(defUser) {
+    if(Meteor.user().username == defUser) {
+      return false;
+    } else {
+      return true;
+    }
+    
   }
 });
 

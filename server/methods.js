@@ -17,16 +17,16 @@ Meteor.methods({
     var room = Room.findOne({_id: roomId});
     if(room) {
       for(var i = 0; i < room.players.length; i++) {
-        if(room.players[i] == Meteor.userId()) {
+        if(room.players[i].username == Meteor.user().username) {
           return;
         }
       }
-      Room.update({_id: roomId}, {$push: {players: Meteor.userId()}});
+      Room.update({_id: roomId}, {$push: {players: {username: Meteor.user().username, score: 0}}});
     }
   },
   createRoom: function() {
     return Room.insert({
-      players: [Meteor.userId()],
+      players: [{username: Meteor.user().username, score: 0}],
       owner: Meteor.userId(),
       word: "test",
       phase: writingPhase,
@@ -36,14 +36,14 @@ Meteor.methods({
   },
   nextPhase: function(roomId) {
     var room = Room.findOne({_id: roomId});
+    var players = room.players;
 
-    var highest = 0;
-    var higestName = "";
     for(var i = 0; i < room.definitions.length; i++) {
       var def = room.definitions[i];
-      if(def.votes.length > highest) {
-        highest = def.votes.length;
-        highestName = def.username;
+      for(var j = 0; j < players.length; j++) {
+        if(players[j].username == def.username) {
+          Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": def.votes.length}});
+        }
       }
     }
 
@@ -51,7 +51,7 @@ Meteor.methods({
       if(room.phase == writingPhase) {
         Room.update({_id: roomId}, {$set: {phase: votingPhase}});
       } else {
-        Room.update({_id: roomId}, {$set: {phase: writingPhase, definitions: [{text: "servers are the smartest", username: "server", votes: []}], winner: highestName}});
+        Room.update({_id: roomId}, {$set: {phase: writingPhase, definitions: [{text: "servers are the smartest", username: "server", votes: []}]}});
                                                                     // put random new definition here
        }
     }

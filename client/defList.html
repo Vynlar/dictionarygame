@@ -4,7 +4,9 @@
     <li>
     <span id="{{username}}"></span><span class="{{hidden}}">{{text}}</span>
       {{#if voting}}
-      <button class="voteButton">Vote</button> | 
+        {{#if notCurrentUser username}}
+          <button class="voteButton">Vote</button> | 
+        {{/if}}
       {{/if}}
     </li>
     {{/each}}
