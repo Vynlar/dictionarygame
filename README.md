@@ -12,6 +12,5 @@ The game is played by 2 or more individuals. The computer chooses a random word 
 
 ### Contributors
 
-* Adrian Aleixandre
-  * [adrianaleixandre.com](http://adrianaleixandre.com)
+* Adrian Aleixandre: [adrianaleixandre.com](http://adrianaleixandre.com)
 
