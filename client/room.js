@@ -113,7 +113,10 @@ Template.nextPhase.helpers({
 
 Template.winner.helpers({
   winner: function() {
-    return Session.get("winner");
+    var room = Room.findOne({_id: Session.get("roomId")});
+    if(room) {
+      return room.winner;
+    }
   },
   exists: function(a) {
     if(typeof a !== 'undefined' && a != null) return true;

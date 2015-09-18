@@ -36,12 +36,24 @@ Meteor.methods({
   },
   nextPhase: function(roomId) {
     var room = Room.findOne({_id: roomId});
+
+    var highest = 0;
+    var higestName = "";
+    for(var i = 0; i < room.definitions.length; i++) {
+      var def = room.definitions[i];
+      if(def.votes.length > highest) {
+        highest = def.votes.length;
+        highestName = def.username;
+      }
+    }
+
     if(room.owner == Meteor.userId()) {
-      if(room.phase == writingPhase)
+      if(room.phase == writingPhase) {
         Room.update({_id: roomId}, {$set: {phase: votingPhase}});
-      else
-        Room.update({_id: roomId}, {$set: {phase: writingPhase, definitions: []}});
+      } else {
+        Room.update({_id: roomId}, {$set: {phase: writingPhase, definitions: [{text: "servers are the smartest", username: "server", votes: []}], winner: highestName}});
                                                                     // put random new definition here
+       }
     }
   },
   judgeGame: function(roomId) {
