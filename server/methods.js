@@ -1,3 +1,6 @@
+var writingPhase = "writing";
+var votingPhase = "voting";
+
 Meteor.methods({
   joinRoom: function(roomId) {
     Room.findOne({_id: roomId}, function(error, room) {
@@ -13,22 +16,35 @@ Meteor.methods({
       players: [Meteor.user()],
       owner: Meteor.userId(),
       definition: "testing",
-      word: "test"
+      word: "test",
+      phase: writingPhase,
+      definitions: []
     });
+  },
+  nextPhase: function(roomId) {
+    var room = Room.findOne({_id: roomId});
+    if(room.owner == Meteor.userId()) {
+      if(room.phase == writingPhase)
+        Room.update({_id: roomId}, {$set: {phase: votingPhase}});
+      else
+        Room.update({_id: roomId}, {$set: {phase: writingPhase}});
+    }
   },
   judgeGame: function(roomId) {
     var room = Room.findOne({_id: roomId});
     for(var i = 0; i < room.definitions.length; i++) {
       var def = room.definitions[i];
-      if(def.text == room.definition) {
-        console.log("win " + def.text);
-        console.log(def);
-        return def;
-      }
+      // loop through all the definitions
     }
     return null;
   },
   addDefinition: function(text, roomId) {
+    var room = Room.findOne({_id: roomId});
+    for(var i = 0; i < room.definitions.length; i++) {
+      if(room.definitions[i].username == Meteor.user().username) {
+        return;
+      }
+    }
     Room.update({_id: roomId},
                 {$push: {definitions: {text: text, username: Meteor.user().username}}});
   },

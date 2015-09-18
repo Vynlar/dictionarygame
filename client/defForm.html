@@ -1,6 +1,8 @@
 <template name="defForm">
-  <form class="new-definition">
-    <input name="definition" type="text"/>
-    <input type="submit"/>
-  </form>
+  {{#if writing}}
+    <form class="new-definition">
+      <input name="definition" type="text"/>
+      <input type="submit"/>
+    </form>
+  {{/if}}
 </template>

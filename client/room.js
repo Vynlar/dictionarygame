@@ -4,17 +4,25 @@ Accounts.ui.config({
   passwordSignupFields: "USERNAME_ONLY"
 });
 
+Template.registerHelper("inRoom", function()  {
+  if(Session.get("roomId")) return true;
+  else return false;
+});
+
 Meteor.startup(function() {
   Session.set("roomId", "");
   if(location.hash != "" && location.hash != "#")
     Session.set("roomId", location.hash.split("#")[1]);
+  Session.set("phase", "writing");
 });
 
 Template.defList.helpers({
   definitions: function() {
-    if(Session.get("roomId") != null)
-      return Room.findOne({_id: Session.get("roomId")}).definitions;
-    else
+    if(Session.get("roomId") != null || Session.get("roomId") != "") {
+      var room = Room.findOne({_id: Session.get("roomId")});
+      if(room)
+        return room.definitions;
+    } else
       return [];
   }
 });
@@ -30,28 +38,49 @@ Template.defForm.events({
   }
 });
 
-Template.judgeButton.events({
-  'click .judgeButton': function(e) {
-    Meteor.call("judgeGame", Session.get("roomId"), function(error, winner) {
-      if(error) return console.log(error.message);
-      if(winner != null) {
-        Session.set("winner", winner.username);
-        Meteor.setTimeout(function() {
-          Session.set("winner", null);
-          Meteor.call("clearRoom", Session.get("roomId"));
-        }, 4000);
+Template.defForm.helpers({
+  writing: function() {
+    var room = Room.findOne({_id: Session.get("roomId")});
+    if(room) {
+      if(room.phase == "writing") {
+        Session.set("phase", "writing");
+        return true;
+      } else {
+        Session.set("phase", "voting");
+       return false; 
       }
-    });
+    }
   }
 });
 
-Template.judgeButton.helpers({
-  room: function() {
+Template.phase.helpers({
+  phase: function() {
+    return Session.get("phase");
+  }
+});
+
+Template.nextPhase.events({
+  'click .nextPhaseButton': function(e) {
+    Meteor.call("nextPhase", Session.get("roomId"));
+  }
+});
+
+Template.nextPhase.helpers({
+  /*room: function() {
     console.log(Session.get("roomId"));
     if(Session.get("roomId") == "")
       return false;
     else
       return true;
+  },*/
+  isOwner: function(){
+    var room = Room.findOne({_id: Session.get("roomId")});
+    if(room) {
+      if(Meteor.userId() == room.owner)
+        return true;
+      else
+        return false;
+    }
   }
 });
 
