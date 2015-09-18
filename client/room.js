@@ -11,9 +11,26 @@ Template.registerHelper("inRoom", function()  {
 
 Meteor.startup(function() {
   Session.set("roomId", "");
-  if(location.hash != "" && location.hash != "#")
+  if(location.hash != "" && location.hash != "#") {
     Session.set("roomId", location.hash.split("#")[1]);
+    Meteor.call("joinRoom", Session.get("roomId")); 
+  }
   Session.set("phase", "writing");
+});
+
+Template.word.helpers({
+  word: function() {
+    var room = Room.findOne({_id: Session.get("roomId")});
+    if(room)
+      return room.word;
+  }
+});
+
+Template.defList.events({
+  "click .voteButton": function(def) {
+    var username = def.target.parentElement.getElementsByTagName("span")[0].id;
+    Meteor.call("vote", Session.get("roomId"), username);
+  }
 });
 
 Template.defList.helpers({
@@ -24,6 +41,16 @@ Template.defList.helpers({
         return room.definitions;
     } else
       return [];
+  },
+  voting: function() {
+    if(Session.get("phase") == "voting") return true;
+    else return false;
+  },
+  hidden: function() {
+    if(Session.get("phase") == "voting")
+      return "";
+    else
+      return "hidden";
   }
 });
 

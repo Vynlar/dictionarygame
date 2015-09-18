@@ -1,3 +1,13 @@
 ul {
   font-size: 1em;
 }
+
+.hidden {
+  display: none;
+}
+
+body {
+  width: 60%;
+  margin: auto;
+  margin-top: 3em;
+}

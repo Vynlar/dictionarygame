@@ -1,7 +1,12 @@
 <template name="defList">
   <ul>
     {{#each definitions}}
-    <li>{{username}}: {{text}}</li>
+    <li>
+    <span id="{{username}}"></span><span class="{{hidden}}">{{text}}</span>
+      {{#if voting}}
+      <button class="voteButton">Vote</button> | 
+      {{/if}}
+    </li>
     {{/each}}
   </ul>
 </template>
