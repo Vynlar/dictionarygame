@@ -1,6 +1,6 @@
 # Dictionary Game
 
-The Dictionary Game is a Meteor.js implimentation of a tabletop/party game called Fictionary. Information about the details of fictionary can be found (here)[https://en.wikipedia.org/wiki/Fictionary] and a brief summary will be proveded below.
+The Dictionary Game is a Meteor.js implimentation of a tabletop/party game called Fictionary. Information about the details of fictionary can be found [here](https://en.wikipedia.org/wiki/Fictionary) and a brief summary will be proveded below.
 
 ### Brief Summary
 
@@ -8,10 +8,10 @@ The game is played by 2 or more individuals. The computer chooses a random word 
 
 ### Technology
 
-(Meteor.js)[http://meteor.com] was used used because of it's easy to impliment multi-user data sharing. This was perfect for creating game rooms and live updates across clients.
+[Meteor.js](http://meteor.com) was used used because of it's easy to impliment multi-user data sharing. This was perfect for creating game rooms and live updates across clients.
 
 ### Contributors
 
 *Adrian Aleixandre
-**(adrianaleixandre.com)[http://adrianaleixandre.com]
+**[adrianaleixandre.com](http://adrianaleixandre.com)
 
