@@ -11,13 +11,13 @@ Meteor.methods({
     }
   },
   createRoom: function() {
+    var def = getRandomWord();
     return Room.insert({
       players: [{username: Meteor.user().username, score: 0}],
       owner: Meteor.userId(),
-      word: "test",
+      word: def.word,
       phase: writingPhase,
-      definitions: [{text: "testing", username: "server", votes: []}]
-                   // TODO: put random initial definition here
+      definitions: [createDefinition(def, "server")]
     });
   },
   nextPhase: function(roomId) {
@@ -28,7 +28,12 @@ Meteor.methods({
       var def = room.definitions[i];
       for(var j = 0; j < players.length; j++) {
         if(players[j].username == def.username) {
-          Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": def.votes.length}});
+          Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": 3*def.votes.length}});
+        }
+        if(def.username == "server") {
+          for(var k = 0; k < def.votes.length; k++) {
+            Room.update({_id: roomId, "players.username": def.votes[k]}, {$inc: {"players.$.score": 1}});
+          }
         }
       }
     }
@@ -37,8 +42,8 @@ Meteor.methods({
       if(room.phase == writingPhase) {
         Room.update({_id: roomId}, {$set: {phase: votingPhase}});
       } else {
-        Room.update({_id: roomId}, {$set: {phase: writingPhase, definitions: [{text: "servers are the smartest", username: "server", votes: []}]}});
-       // TODO: put random new definition here
+        var newDef = getRandomWord();
+        Room.update({_id: roomId}, {$set: {phase: writingPhase, word: newDef.word, definitions: [createDefinition(newDef, "server")]}});
        }
     }
   },

@@ -1,3 +1,5 @@
+var words = JSON.parse(Assets.getText("words.json"));
+
 getRoom = function(roomId) {
   return Room.findOne({_id: roomId});
 }
@@ -21,3 +23,14 @@ isPlayerInRoom = function(room) {
   }
   return false;
 }
+
+getRandomWord = function() {
+  var w = words[Math.floor(Math.random()*words.length)];
+  return w;
+}
+
+createDefinition = function(word, player) {
+  return {text: word.definition, username: player, votes: []};
+}
+
+console.log(getRandomWord());
