@@ -1,27 +1,13 @@
 var writingPhase = "writing";
 var votingPhase = "voting";
 
-function shuffle(array) {
-  var m = array.length, t, i;
-  while (m) {
-    i = Math.floor(Math.random() * m--);
-    t = array[m];
-    array[m] = array[i];
-    array[i] = t;
-  }
-  return array;
-}
-
 Meteor.methods({
   joinRoom: function(roomId) {
-    var room = Room.findOne({_id: roomId});
+    var room = getRoom(roomId);
     if(room) {
-      for(var i = 0; i < room.players.length; i++) {
-        if(room.players[i].username == Meteor.user().username) {
-          return;
-        }
+      if(!isPlayerInRoom(room)) {
+        Room.update({_id: roomId}, {$push: {players: {username: Meteor.user().username, score: 0}}});
       }
-      Room.update({_id: roomId}, {$push: {players: {username: Meteor.user().username, score: 0}}});
     }
   },
   createRoom: function() {
@@ -31,11 +17,11 @@ Meteor.methods({
       word: "test",
       phase: writingPhase,
       definitions: [{text: "testing", username: "server", votes: []}]
-                   //put random initial definition here
+                   // TODO: put random initial definition here
     });
   },
   nextPhase: function(roomId) {
-    var room = Room.findOne({_id: roomId});
+    var room = getRoom(roomId);
     var players = room.players;
 
     for(var i = 0; i < room.definitions.length; i++) {
@@ -52,20 +38,12 @@ Meteor.methods({
         Room.update({_id: roomId}, {$set: {phase: votingPhase}});
       } else {
         Room.update({_id: roomId}, {$set: {phase: writingPhase, definitions: [{text: "servers are the smartest", username: "server", votes: []}]}});
-                                                                    // put random new definition here
+       // TODO: put random new definition here
        }
     }
   },
-  judgeGame: function(roomId) {
-    var room = Room.findOne({_id: roomId});
-    for(var i = 0; i < room.definitions.length; i++) {
-      var def = room.definitions[i];
-      // loop through all the definitions
-    }
-    return null;
-  },
   addDefinition: function(text, roomId) {
-    var room = Room.findOne({_id: roomId});
+    var room = getRoom(roomId);
     for(var i = 0; i < room.definitions.length; i++) {
       if(room.definitions[i].username == Meteor.user().username) {
         return;
@@ -73,7 +51,7 @@ Meteor.methods({
     }
     Room.update({_id: roomId},
                 {$push: {definitions: {text: text, username: Meteor.user().username, votes: []}}});
-    var room = Room.findOne({_id: roomId});
+    var room = getRoom(roomId);
     var shuffled = shuffle(room.definitions);
     Room.update({_id: roomId},
                 {$set: {definitions: shuffled}});
@@ -84,13 +62,17 @@ Meteor.methods({
     return player.username;
   },
   vote: function(roomId, username) {
-    var room = Room.findOne({_id: roomId});
-    for(var i = 0; i < room.definitions.length; i++) {
-      var def = room.definitions[i];
-      for(var j = 0; j < def.votes.length; j++) {
-        var user = def.votes[i];
-        if(Meteor.user().username == user) {
-          return;
+    var room = getRoom(roomId);
+    if(room) {
+      if(isPlayerInRoom(room)) {
+        for(var i = 0; i < room.definitions.length; i++) {
+          var def = room.definitions[i];
+          for(var j = 0; j < def.votes.length; j++) {
+            var user = def.votes[i];
+            if(Meteor.user().username == user) {
+              return;
+            }
+          }
         }
       }
     }
