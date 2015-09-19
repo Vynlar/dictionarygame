@@ -48,9 +48,14 @@ Meteor.methods({
   },
   addDefinition: function(text, roomId) {
     var room = getRoom(roomId);
-    if(room.Object.keys(players.inde)xOf(Meteor.user().username) == -1) {
-      return;
+    
+    var presentInRoom = false;
+    for(var i = 0; i < room.players.length; i++) {
+      if(room.players[i].username == Meteor.user().username) {
+        presentInRoom = true;
+      } 
     }
+    if(!presentInRoom) return;
     //returns if a def is already present
     for(var i = 0; i < room.definitions.length; i++) {
       if(room.definitions[i].username == Meteor.user().username) {

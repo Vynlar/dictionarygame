@@ -8,15 +8,7 @@ Template.registerHelper("inRoom", function()  {
   if(Session.get("roomId")) {
     return true;
   }
-  /*
-  var room = Room.findOne({_id: Session.get("roomId")});
-  if(room) {
-    if(room.players.indexOf(Meteor.user().username) != -1) {
-      return true;
-    } 
-  }
-  */
-  return false;
+  else return false;
 });
 
 Meteor.startup(function() {
