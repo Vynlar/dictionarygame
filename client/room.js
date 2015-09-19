@@ -5,8 +5,18 @@ Accounts.ui.config({
 });
 
 Template.registerHelper("inRoom", function()  {
-  if(Session.get("roomId")) return true;
-  else return false;
+  if(Session.get("roomId")) {
+    return true;
+  }
+  /*
+  var room = Room.findOne({_id: Session.get("roomId")});
+  if(room) {
+    if(room.players.indexOf(Meteor.user().username) != -1) {
+      return true;
+    } 
+  }
+  */
+  return false;
 });
 
 Meteor.startup(function() {
@@ -26,12 +36,27 @@ Template.word.helpers({
   }
 });
 
+Template.playerList.events({
+  "click .removePlayer": function(e) {
+    var username = e.target.attributes['data-username'].value;
+    Meteor.call("removePlayer", Session.get("roomId"), username);
+  }
+});
+
 Template.playerList.helpers({
   players: function() {
     var room = Room.findOne({_id: Session.get("roomId")});
     if(room) {
       return room.players;
     }
+  },
+  isOwner: function() {
+    var room = Room.findOne({_id: Session.get("roomId")});
+    if(Meteor.userId() == room.owner) return true;
+    return false;
+  },
+  hidden: function(username) {
+    return Meteor.user().username == username ? "hidden" : "";
   }
 });
 

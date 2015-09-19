@@ -1,7 +1,11 @@
 <template name="playerList">
   <ul>
     {{#each players}}
-      <li>{{username}} | {{score}}</li>
+      <li>
+      {{#if isOwner}}
+        <button class="removePlayer {{hidden username}}" data-username="{{username}}">Kick</button>
+      {{/if}}
+      {{username}} | {{score}}</li>
     {{/each}}
   </ul>
 </template>

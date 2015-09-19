@@ -33,4 +33,14 @@ createDefinition = function(word, player) {
   return {text: word.definition, username: player, votes: []};
 }
 
-console.log(getRandomWord());
+checkVotingEnded = function(room) {
+  if(room.voted + 1 == room.definitions.length) {
+     return true;
+  }
+  return false;
+}
+
+checkDefinitionsEnded = function(room) {
+  return (room.definitions.length - 1 == room.players.length) ? true : false;
+}
+

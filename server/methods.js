@@ -17,7 +17,8 @@ Meteor.methods({
       owner: Meteor.userId(),
       word: def.word,
       phase: writingPhase,
-      definitions: [createDefinition(def, "server")]
+      definitions: [createDefinition(def, "server")],
+      voted: 0
     });
   },
   nextPhase: function(roomId) {
@@ -38,17 +39,19 @@ Meteor.methods({
       }
     }
 
-    if(room.owner == Meteor.userId()) {
-      if(room.phase == writingPhase) {
-        Room.update({_id: roomId}, {$set: {phase: votingPhase}});
-      } else {
-        var newDef = getRandomWord();
-        Room.update({_id: roomId}, {$set: {phase: writingPhase, word: newDef.word, definitions: [createDefinition(newDef, "server")]}});
-       }
+    if(room.phase == writingPhase) {
+      Room.update({_id: roomId}, {$set: {phase: votingPhase, voted: 0}});
+    } else {
+      var newDef = getRandomWord();
+      Room.update({_id: roomId}, {$set: {phase: writingPhase, word: newDef.word, definitions: [createDefinition(newDef, "server")]}});
     }
   },
   addDefinition: function(text, roomId) {
     var room = getRoom(roomId);
+    if(room.Object.keys(players.inde)xOf(Meteor.user().username) == -1) {
+      return;
+    }
+    //returns if a def is already present
     for(var i = 0; i < room.definitions.length; i++) {
       if(room.definitions[i].username == Meteor.user().username) {
         return;
@@ -56,15 +59,53 @@ Meteor.methods({
     }
     Room.update({_id: roomId},
                 {$push: {definitions: {text: text, username: Meteor.user().username, votes: []}}});
-    var room = getRoom(roomId);
+    // XXX
+    room = getRoom(roomId);
     var shuffled = shuffle(room.definitions);
+    // XXX
+    if(checkDefinitionsEnded(room)) {
+      //Go to voting phase
+      Meteor.call("nextPhase", roomId);
+    }
     Room.update({_id: roomId},
                 {$set: {definitions: shuffled}});
+    
   },
   getPlayerName: function(playerId) {
     var player = Meteor.users.findOne({_id: playerId});
     console.log(player.username);
     return player.username;
+  },
+  removePlayer: function(roomId, username) {
+    var room = getRoom(roomId);
+    if(room) {
+      if(room.owner == Meteor.userId()) {
+        //search through the room removing everything about a given player
+        //remove player from array
+        Room.update({_id: roomId}, {$pop: {players: username}});
+        //remove their votes
+        for(var i = 0; i < room.definitions.length; i++) {
+          var def = room.definitions[i];
+          for(var j = 0; j < def.votes.length; j++) {
+            //if the player voted
+            if(def.votes[j] == username) {
+              Room.update({_id: roomId, "definitions.username": def.username}, {$pop: {"definitions.$.votes": username}});
+              Room.update({_id: roomId}, {$inc: {voted: -1}});
+            }
+          }
+          //if the player is the owner of the def
+          if(def.username == username) {
+            Room.update({_id: roomId, "definitions.username": username}, {$pop: {"definitions": username}});
+          }
+        }
+      }
+      if(checkVotingEnded(getRoom(roomId))) {
+        Meteor.call("nextPhase", roomId);
+      }
+      if(checkDefinitionsEnded(room)) {
+        Meteor.call("nextPhase", roomId);
+      }
+    }
   },
   vote: function(roomId, username) {
     var room = getRoom(roomId);
@@ -82,5 +123,9 @@ Meteor.methods({
       }
     }
     Room.update({_id: roomId, "definitions.username": username},{$push: {"definitions.$.votes": Meteor.user().username}});
+    Room.update({_id: roomId},{$inc: {voted: 1}});
+    if(checkVotingEnded(room)) {
+      Meteor.call("nextPhase", roomId);
+    }
   }
 });
