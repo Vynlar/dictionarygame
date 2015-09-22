@@ -29,7 +29,7 @@ Meteor.methods({
       var def = room.definitions[i];
       for(var j = 0; j < players.length; j++) {
         if(players[j].username == def.username) {
-          Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": 3*def.votes.length}});
+          Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": 2*def.votes.length}});
         }
         if(def.username == "server") {
           for(var k = 0; k < def.votes.length; k++) {
@@ -38,6 +38,9 @@ Meteor.methods({
         }
       }
     }
+
+    room = getRoom(roomId);
+    checkWin(room);
 
     if(room.phase == writingPhase) {
       Room.update({_id: roomId}, {$set: {phase: votingPhase, voted: 0}});
@@ -62,6 +65,10 @@ Meteor.methods({
         return;
       }
     }
+
+    //make all definitions lower case for consistency
+    text = text.toLowerCase();
+
     Room.update({_id: roomId},
                 {$push: {definitions: {text: text, username: Meteor.user().username, votes: []}}});
     // XXX

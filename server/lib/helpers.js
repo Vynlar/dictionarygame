@@ -34,7 +34,8 @@ createDefinition = function(word, player) {
 }
 
 checkVotingEnded = function(room) {
-  if(room.voted + 1 == room.definitions.length) {
+  console.log(room);
+  if(room.voted >= room.definitions.length - 2) {
      return true;
   }
   return false;
@@ -44,3 +45,18 @@ checkDefinitionsEnded = function(room) {
   return (room.definitions.length - 1 == room.players.length) ? true : false;
 }
 
+checkWin = function(room) {
+  for(var i = 0; i < room.players.length; i++) {
+    if(room.players[i].score >= 11) {
+      Room.update({_id: room._id}, {$set: {winner: room.players[i].username}});
+      resetRoom(room);
+    }
+  }
+}
+
+resetRoom = function(room) {
+  for(var i = 0; i < room.players.length; i++) {
+    room.players[i].score = 0;
+  }
+  Room.update({_id: room._id}, {$set: {players: room.players}});
+}
