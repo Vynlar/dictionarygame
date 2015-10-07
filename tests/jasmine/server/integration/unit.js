@@ -4,15 +4,15 @@ describe("helpers", function() {
       var room = {
         voted: 3,
         definitions: [null, null, null]
-      }
+      };
 
       expect(checkVotingEnded(room)).toEqual(true);
     });
-    it("should return false if the definitions are more then the votes", function() {
+    it("should return false if the definitions are two more then the votes", function() {
       var room = {
-        voted: 2,
+        voted: 1,
         definitions: [null, null, null]
-      }
+      };
 
       expect(checkVotingEnded(room)).toEqual(false);
     });
@@ -20,8 +20,9 @@ describe("helpers", function() {
       var room = {
         voted: 4,
         definitions: [null, null, null]
-      }
+      };
 
-      expect(checkVotingEnded(room)).toEqual(false);
+      expect(checkVotingEnded(room)).toEqual(true);
+    });
   });
 });
