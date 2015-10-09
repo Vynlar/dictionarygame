@@ -39,6 +39,10 @@ describe("Dictionary Game", function() {
 
   describe("Methods", function() {
 
+    beforeEach(function() {
+      Room.remove({});
+    });
+
     describe("joinRoom():", function() {
       it("should add a user into the room if they are not already in the room", function() {
         spyOn(Room, "update");
