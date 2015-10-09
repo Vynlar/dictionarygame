@@ -1,10 +1,12 @@
 var words = JSON.parse(Assets.getText("words.json"));
 
-getRoom = function(roomId) {
+Helpers = {};
+
+Helpers.getRoom = function(roomId) {
   return Room.findOne({_id: roomId});
 };
 
-shuffle = function(array) {
+Helpers.shuffle = function(array) {
   var m = array.length, t, i;
   while (m) {
     i = Math.floor(Math.random() * m--);
@@ -15,7 +17,7 @@ shuffle = function(array) {
   return array;
 };
 
-isPlayerInRoom = function(room) {
+Helpers.isPlayerInRoom = function(room) {
   for(var i = 0; i < room.players.length; i++) {
     if(room.players[i].username == Meteor.user().username) {
       return true;
@@ -24,27 +26,27 @@ isPlayerInRoom = function(room) {
   return false;
 };
 
-getRandomWord = function() {
+Helpers.getRandomWord = function() {
   var w = words[Math.floor(Math.random()*words.length)];
   return w;
 };
 
-createDefinition = function(word, player) {
+Helpers.createDefinition = function(word, player) {
   return {text: word.definition, username: player, votes: []};
 };
 
-checkVotingEnded = function(room) {
+Helpers.checkVotingEnded = function(room) {
   if(room.voted >= room.definitions.length - 1) {
      return true;
   }
   return false;
 };
 
-checkDefinitionsEnded = function(room) {
+Helpers.checkDefinitionsEnded = function(room) {
   return (room.definitions.length - 1 == room.players.length) ? true : false;
 };
 
-checkWin = function(room) {
+Helpers.checkWin = function(room) {
   for(var i = 0; i < room.players.length; i++) {
     if(room.players[i].score >= 11) {
       Room.update({_id: room._id}, {$set: {winner: room.players[i].username}});
@@ -53,7 +55,7 @@ checkWin = function(room) {
   }
 };
 
-resetRoom = function(room) {
+Helpers.resetRoom = function(room) {
   for(var i = 0; i < room.players.length; i++) {
     room.players[i].score = 0;
   }
