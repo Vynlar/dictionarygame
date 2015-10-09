@@ -10,3 +10,4 @@ accounts-password
 sanjo:jasmine
 velocity:html-reporter
 velocity:meteor-stubs
+jquery
