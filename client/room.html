@@ -1,15 +1,31 @@
 <body>
-  {{> loginButtons}}
-  {{#if currentUser}}
-    {{#if inRoom}}
-      {{> word}}
-      <!--{{> phase}}-->
-      {{> winner}}
-      {{> defList}}
-      {{> defForm}}
-      {{> nextPhase}}
-      {{> playerList}}
-    {{/if}}
-    {{> createRoom}}
-  {{/if}}
+  <div class="container">
+    <div class="row">
+      <div class="col s8 offset-s2">
+        {{> loginButtons}}
+        {{#if currentUser}}
+          {{#if inRoom}}
+            <div class="row">
+              <div class="col s12">
+                {{> word}}
+              </div>
+            </div>
+            <!--{{> phase}}-->
+            {{> winner}}
+            {{> defList}}
+            <div class="row">
+              <div class="col s6">
+                {{> defForm}}
+              </div>
+              <div class="col s6">
+                {{> playerList}}
+              </div>
+            </div>
+            {{> nextPhase}}
+          {{/if}}
+          {{> createRoom}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
 </body>

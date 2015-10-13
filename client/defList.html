@@ -1,14 +1,15 @@
 <template name="defList">
-  <ul>
+  <ul class="collection">
+    
     {{#each definitions}}
-    <li>
-    <span id="{{username}}"></span><span class="{{hidden}}">{{text}}</span>
-      {{#if voting}}
-        {{#if notCurrentUser username}}
-          <button class="voteButton">Vote</button> | 
+      <li class="collection-item">
+      <span class="{{hidden}}">{{text}}</span>
+        {{#if voting}}
+          {{#if notCurrentUser username}}
+            <span class="badge"><button id="{{username}}" class="voteButton">Vote</button> {{votes.length}}</span>
+          {{/if}}
         {{/if}}
-      {{/if}}
-    </li>
+      </li>
     {{/each}}
   </ul>
 </template>

@@ -13,9 +13,9 @@ Template.registerHelper("inRoom", function()  {
 
 Meteor.startup(function() {
   Session.set("roomId", "");
-  if(location.hash != "" && location.hash != "#") {
+  if(location.hash !== "" && location.hash !== "#") {
     Session.set("roomId", location.hash.split("#")[1]);
-    Meteor.call("joinRoom", Session.get("roomId")); 
+    Meteor.call("joinRoom", Session.get("roomId"));
   }
   Session.set("phase", "writing");
 });
@@ -54,14 +54,16 @@ Template.playerList.helpers({
 
 Template.defList.events({
   "click .voteButton": function(def) {
-    var username = def.target.parentElement.getElementsByTagName("span")[0].id;
+    // XXX could switch it to use data tags instead of the id
+    var username = def.target.id;
+    console.log(username);
     Meteor.call("vote", Session.get("roomId"), username);
   }
 });
 
 Template.defList.helpers({
   definitions: function() {
-    if(Session.get("roomId") != null || Session.get("roomId") != "") {
+    if(Session.get("roomId") !== null || Session.get("roomId") !== "") {
       var room = Room.findOne({_id: Session.get("roomId")});
       if(room)
         return room.definitions;
@@ -84,18 +86,19 @@ Template.defList.helpers({
     } else {
       return true;
     }
-    
+
   }
 });
 
 Template.defForm.events({
-  'submit .new-definition': function(e) {
-    e.preventDefault();
-    var definition = e.target.definition.value;
+  'click #formSubmitButton': function(e) {
+    //e.preventDefault();
+    var form = document.getElementById("defForm");
+    console.log(form.definition.value);
 
-    Meteor.call("addDefinition", definition, Session.get("roomId"));
+    Meteor.call("addDefinition", form.definition.value, Session.get("roomId"));
 
-    e.target.definition.value = "";
+    form.definition.value = "";
   }
 });
 
@@ -108,7 +111,7 @@ Template.defForm.helpers({
         return true;
       } else {
         Session.set("phase", "voting");
-       return false; 
+       return false;
       }
     }
   }
@@ -153,14 +156,14 @@ Template.winner.helpers({
     }
   },
   exists: function(a) {
-    if(typeof a !== 'undefined' && a != null) return true;
+    if(typeof a !== 'undefined' && a !== null) return true;
     else return false;
   }
 });
 
 Template.createRoom.helpers({
   lacksRoomId: function() {
-    if(Session.get("roomId") == "") 
+    if(Session.get("roomId") === "")
       return true;
     else
       return false;
@@ -171,7 +174,7 @@ Template.createRoom.events({
   'click .createRoom': function(e) {
     Meteor.call("createRoom", function(error, roomId) {
       if(error) return console.log(error.message);
-      Session.set("roomId", roomId); 
+      Session.set("roomId", roomId);
       location.hash = "#" + roomId;
     });
   }

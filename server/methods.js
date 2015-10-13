@@ -84,7 +84,7 @@ Methods.addDefinition = function(text, roomId) {
     Meteor.call("nextPhase", roomId);
   }
   Room.update({_id: roomId},
-              {$set: {definitions: Helpers.shuffled}});
+              {$set: {definitions: shuffled}});
 };
 
 Methods.getPlayerName = function(playerId) {
