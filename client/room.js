@@ -79,6 +79,45 @@ Template.playerList.helpers({
   }
 });
 
+var login = function(e) {
+  e.preventDefault();
+  var form = document.getElementById("loginForm");
+  var username = form.username.value;
+  var password = form.password.value;
+  Meteor.loginWithPassword(username, password, function(error) {
+    console.log(error);
+    var output = "";
+    switch(error.error) {
+      case 400:
+        output = "Invalid username or password.";
+      break;
+      case 403:
+        output = "Invalid username or password.";
+      break;
+      default:
+        output = error.reason;
+      break;
+    }
+    document.getElementById("loginError").innerHTML = output;
+  });
+};
+Template.loginFrame.events({
+  'submit #loginForm': login,
+  'click #loginFormSubmit': login,
+  'click #logout': function() {
+    Meteor.logout();
+  }
+});
+
+Template.loginFrame.helpers({
+  username: function() {
+    var user = Meteor.user();
+    if(user)
+      return user.username;
+    return "";
+  }
+});
+
 Template.defList.events({
   "click .voteButton": function(e) {
     // XXX could switch it to use data tags instead of the id

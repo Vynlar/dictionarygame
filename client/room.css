@@ -19,8 +19,17 @@ ul {
   position: absolute;
 }
 
-#defForm input {
-  border-bottom: 1px solid white; }
+input[type=text] {
+  border-bottom: 1px solid white !important;
+}
+
+input[type=password] {
+  border-bottom: 1px solid white !important;
+}
+
+#loginForm .row {
+  margin-bottom: 0;
+}
 
 .showShadow {
   overflow: visible !important;
