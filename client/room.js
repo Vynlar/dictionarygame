@@ -90,16 +90,19 @@ Template.defList.helpers({
   }
 });
 
+var submitDefinition = function(e) {
+  e.preventDefault();
+  var form = document.getElementById("defForm");
+  console.log(form.definition.value);
+
+  Meteor.call("addDefinition", form.definition.value, Session.get("roomId"));
+
+  form.definition.value = "";
+};
+
 Template.defForm.events({
-  'click #formSubmitButton': function(e) {
-    //e.preventDefault();
-    var form = document.getElementById("defForm");
-    console.log(form.definition.value);
-
-    Meteor.call("addDefinition", form.definition.value, Session.get("roomId"));
-
-    form.definition.value = "";
-  }
+  'submit #defForm': submitDefinition,
+  'click #formSubmitButton': submitDefinition
 });
 
 Template.defForm.helpers({
