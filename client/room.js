@@ -29,7 +29,7 @@ Meteor.startup(function() {
 Template.correctDef.helpers({
   definition: function() {
     var room = Room.findOne({_id: Session.get("roomId")});
-    return room.correctDef;
+    return "'" + room.correctDef + "'";
   }
 });
 
@@ -90,7 +90,7 @@ Template.defList.helpers({
     if(Session.get("phase") == "voting")
       return "";
     else
-      return "hidden";
+      return "hidden hiddenDef";
   },
   notCurrentUser: function(defUser) {
     if(Meteor.user().username == defUser) {
