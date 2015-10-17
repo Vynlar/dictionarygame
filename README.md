@@ -12,8 +12,6 @@ The game is played by two or more individuals. The computer chooses a random wor
 
 ### ToDo
 
-* Write custom authentication front-end
-* Trigger joinRoom on login
 * Finish writing tests on server
 * Write client tests
 * Filter dictionary for difficulty
