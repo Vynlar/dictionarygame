@@ -132,7 +132,7 @@ describe("Methods", function() {
     it("should allow players to submit only during writing", function() {
       spyOn(Helpers, "getRoom").and.returnValue({
         _id: "roomId",
-        phase: "voting"
+        phase: "voting",
         players: [{username: "vynlar"}]
       });
       spyOn(Room, "update");
@@ -180,19 +180,50 @@ describe("Methods", function() {
       expect(Room.update).not.toHaveBeenCalled();
     });
     it("should only allow players who wrote to vote", function() {
-      fail();
+      spyOn(Room, "findOne").and.returnValue({
+        players: [{username: "vynlar2"}],
+        definitions: [{username: "vynlar2"}]
+      });
+      spyOn(Room, "update");
+      spyOn(Meteor, "user").and.returnValue({
+        username: "vynlar" 
+      });
+
+      Methods.vote("roomId", "vynlar2");
+      
+      expect(Room.update).not.toHaveBeenCalled();
     });
   });
 
   describe("removePlayer():", function() {
-    it("should remove the player from the room", function() {
-      fail();  
+    it("should remove the player, their votes, and their definitions from the room", function() {
+      spyOn(Helpers, "getRoom").and.returnValue({
+        players: [{username: "vynlar"},
+                  {username: "vynlar2"}],
+        definitions: [{username: "vynlar", votes: ["vynlar2"]},
+                      {username: "vynlar2", votes: ["vynlar"]}],
+        voted: 1
+      });
+      spyOn(Room, "update");
+      spyOn(Meteor, "call");
+
+      Methods.removePlayer("roomId", "vynlar");
+
+      expect(Room.update).toHaveBeenCalledWith({_id: "roomId"}, {$pop: {players: "vynlar"}});
+      expect(Room.update).toHaveBeenCalledWith({_id: "roomId", "definitions.username": "vynlar2"}, {$pop: {"definitions.$.votes": "vynlar"}});
+      expect(Room.update).toHaveBeenCalledWith({_id: "roomId"}, {$pop: {players: "vynlar"}});
+      expect(Room.update).toHaveBeenCalledWith({_id: "roomId", "definitions.username": "vynlar"}, {$pop: {"definitions": "vynlar"}});
+      expect(Room.update).toHaveBeenCalledWith({_id: "roomId"}, {$inc: {voted: -1}});
+      expect(Meteor.call).toHaveBeenCalledWith("nextPhase", "roomId");
     });
-    it("should go to the next phase if the kicked player was the only one who had not submitted", function() {
-      fail();  
+    xit("should go to the next phase if the kicked player was the only one who had not submitted", function() {
+      fail("Unimplimented");  
     });
-    it("should go to the next phase if the kicked player was the only one who had not voted", function() {
-      fail();  
+    xit("should go to the next phase if the kicked player was the only one who had not voted", function() {
+      fail("Unimplimented");  
+    });
+    xit("should only let the owner of the room kick", function() {
+      fail("Unimplimented");  
     });
   });
 });

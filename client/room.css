@@ -20,5 +20,18 @@ ul {
 }
 
 #defForm input {
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid white; }
+
+.showShadow {
+  overflow: visible !important;
+}
+
+.defLi {
+  margin-bottom: 0.6em !important;
+  border: 2px solid #e0e0e0;
+  border-radius: 3px;
+}
+
+#defList {
+  border: none;
 }

@@ -19,7 +19,7 @@ Helpers.shuffle = function(array) {
 
 Helpers.isPlayerInRoom = function(room) {
   for(var i = 0; i < room.players.length; i++) {
-    if(room.players[i].username == Meteor.user().username) {
+    if(Meteor.user() && room.players[i].username == Meteor.user().username) {
       return true;
     }
   }

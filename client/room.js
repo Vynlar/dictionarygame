@@ -71,9 +71,7 @@ Template.playerList.helpers({
   submitted: function(username) {
     var room = Room.findOne({_id: Session.get("roomId")});
     for(var i = 0; i < room.definitions.length; i++) {
-      console.log("looped");
       if(room.definitions[i].username == username) {
-        console.log("ligntened");
         return "blue lighten-1";
       }
     }

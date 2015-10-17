@@ -1,8 +1,8 @@
 <template name="defList">
-  <ul class="collection">
+  <ul id="defList" class="showShadow collection">
 
     {{#each definitions}}
-      <li class="collection-item">
+      <li class="defLi z-depth-1 collection-item">
       <span class="{{hidden}}">{{text}}</span>
         {{#if voting}}
           <span class="secondary-content black-text text-lighten-2">
