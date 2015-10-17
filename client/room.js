@@ -101,11 +101,40 @@ var login = function(e) {
     document.getElementById("loginError").innerHTML = output;
   });
 };
+
+var register = function(e) {
+  e.preventDefault();
+  var form = document.getElementById("registerForm");
+  var username = form.username.value;
+  var password = form.password.value;
+  Accounts.createUser({
+    username: username,
+    password: password,
+  }, function(error) {
+    console.log(error);
+    if(error) {
+      var output = error.reason;
+      switch(error.error) {
+        
+      }
+      document.getElementById("registerError").innerHTML = output;
+    }
+  });
+};
+
 Template.loginFrame.events({
   'submit #loginForm': login,
   'click #loginFormSubmit': login,
   'click #logout': function() {
     Meteor.logout();
+  },
+  'submit #registerForm': register,
+  'click #registerFormSubmit': register,
+  'click #register': function() {
+    Session.set("registering", true);
+  },
+  'click #login': function() {
+    Session.set("registering", false);
   }
 });
 
@@ -115,6 +144,12 @@ Template.loginFrame.helpers({
     if(user)
       return user.username;
     return "";
+  },
+  registering: function() {
+    if(!Session.get("registering"))
+      return Session.set("registering", fasle);
+    else
+      return Session.get("registering");
   }
 });
 

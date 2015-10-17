@@ -31,6 +31,10 @@ input[type=password] {
   margin-bottom: 0;
 }
 
+#registerForm .row {
+  margin-bottom: 0;
+}
+
 .showShadow {
   overflow: visible !important;
 }

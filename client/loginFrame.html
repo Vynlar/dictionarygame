@@ -9,34 +9,65 @@
       </a>
     </div>
   {{else}}
-  <div class="row">
-    <div class="col s8 offset-s2">
-      <div class="card blue darken-2 white-text">
-        <div class="card-content">
-          <span class="card-title">Login
-            <p id="loginError" class="red-text text-lighten-3" style="display: inline; font-size: 0.65em;">
-
-            </p>
-          </span>
-          <form id="loginForm">
-            <div class="row">
-              <div class="col s12">
-                <input type="text" name="username" placeholder="Username" />
-              </div>
+    <div class="row">
+      <div class="col s8 offset-s2">
+        <div class="card blue darken-2 white-text">
+          {{#if registering}}
+            <div class="card-content">
+              <span class="card-title">Register
+                <p id="registerError" class="red-text text-lighten-3" style="display: inline; font-size: 0.65em;">
+                </p>
+              </span>
+              <form id="registerForm">
+                <div class="row">
+                  <div class="col s12">
+                    <input type="text" name="username" placeholder="Username" />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <input type="password" name="password" placeholder="Password" />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <input type="password" name="confirm" placeholder="Confirm" />
+                    <input type="submit" style="display: none;" />
+                  </div>
+                </div>
+              </form>
             </div>
-            <div class="row">
-              <div class="col s12">
-                <input type="password" name="password" placeholder="Password" />
-                <input type="submit" style="display: none;" />
-              </div>
+            <div class="card-action">
+              <a id="registerFormSubmit" href="javascript:{}" class="btn waves-effect white-text">Register</a>
+              <a id="login" href="javascript:{}" class="btn-flat waves-effect white-text">Login</a>
             </div>
-          </form>
-        </div>
-        <div class="card-action">
-          <a id="loginFormSubmit" href="javascript:{}" class="btn white-text">Login</a>
+          {{else}}
+            <div class="card-content">
+              <span class="card-title">Login
+                <p id="loginError" class="red-text text-lighten-3" style="display: inline; font-size: 0.65em;">
+                </p>
+              </span>
+              <form id="loginForm">
+                <div class="row">
+                  <div class="col s12">
+                    <input type="text" name="username" placeholder="Username" />
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <input type="password" name="password" placeholder="Password" />
+                    <input type="submit" style="display: none;" />
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="card-action">
+              <a id="loginFormSubmit" href="javascript:{}" class="btn waves-effect white-text">Login</a>
+              <a id="register" href="javascript:{}" class="btn-flat waves-effect white-text">Register</a>
+            </div>
+          {{/if}}
         </div>
       </div>
     </div>
-  </div>
   {{/if}}
 </template>
