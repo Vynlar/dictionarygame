@@ -132,6 +132,9 @@ Methods.removePlayer = function(roomId, username) {
 
 Methods.vote = function(roomId, username) {
   console.log(username);
+  if(Meteor.user().username == username) {
+    return;
+  }
   var room = Helpers.getRoom(roomId);
   if(room) {
     if(Helpers.isPlayerInRoom(room)) {

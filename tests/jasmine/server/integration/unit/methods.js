@@ -129,5 +129,70 @@ describe("Methods", function() {
 
       expect(Room.update).not.toHaveBeenCalled();
     });
+    it("should allow players to submit only during writing", function() {
+      spyOn(Helpers, "getRoom").and.returnValue({
+        _id: "roomId",
+        phase: "voting"
+        players: [{username: "vynlar"}]
+      });
+      spyOn(Room, "update");
+
+      Methods.addDefinition("def", "roomId");
+
+      expect(Room.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("vote():", function() {
+    it("should block the player from voting twice", function() {
+      spyOn(Room, "findOne").and.returnValue({
+        definitions: [{username: "vynlar2", votes: ["vynlar"]}],
+        players: [{username: "vynlar"}]
+      });
+      spyOn(Room, "update");
+
+      Methods.vote("roomId", "vynlar2");
+      
+      expect(Room.update).not.toHaveBeenCalled();
+    });
+    it("should block the player from voting for themself", function() {
+      spyOn(Room, "findOne").and.returnValue({
+        definitions: [{username: "vynlar", votes: []}],
+        players: [{username: "vynlar"}]
+      });
+      spyOn(Room, "update");
+      spyOn(Meteor, "user").and.returnValue({
+        username: "vynlar" 
+      });
+
+      Methods.vote("roomId", "vynlar");
+
+      expect(Room.update).not.toHaveBeenCalled();
+    });
+    it("should block the player from voting in a room they are not in", function() {
+      spyOn(Room, "findOne").and.returnValue({
+        players: [{username: "vynlar2"}]
+      });
+      
+      spyOn(Room, "update");
+      Methods.vote("roomId", "vynlar");
+
+      expect(Room.update).not.toHaveBeenCalled();
+    });
+    it("should only allow players who wrote to vote", function() {
+      fail();
+    });
+  });
+
+  describe("removePlayer():", function() {
+    it("should remove the player from the room", function() {
+      fail();  
+    });
+    it("should go to the next phase if the kicked player was the only one who had not submitted", function() {
+      fail();  
+    });
+    it("should go to the next phase if the kicked player was the only one who had not voted", function() {
+      fail();  
+    });
   });
 });

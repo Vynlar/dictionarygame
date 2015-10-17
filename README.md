@@ -19,6 +19,9 @@ The game is played by two or more individuals. The computer chooses a random wor
 * Filter dictionary for difficulty
 * Make skip word button for host (trigger nextPhase twice or new function?)
 * Decide and implement a win system
+* Stretch Goals
+  * Make players auto leave on browser close
+  * AFK detection
 
 ### Contributors
 
@@ -27,3 +30,4 @@ The game is played by two or more individuals. The computer chooses a random wor
 * Kolya Venturi: [kolya.co](http://kolya.co)
   * Data Gathering
   * General Advice
+  * Wrote Tests
