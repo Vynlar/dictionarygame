@@ -6,3 +6,15 @@ ul {
   opacity: 0;
   display: none;
 }
+
+.voteButton {
+  margin-right: 0.65em;
+}
+
+.nextPhaseButton {
+  position: absolute;
+}
+
+#defForm input {
+  border-bottom: 1px solid white;
+}

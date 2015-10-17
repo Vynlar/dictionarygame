@@ -8,6 +8,7 @@
             <div class="row">
               <div class="col s12">
                 {{> word}}
+
               </div>
             </div>
             <!--{{> phase}}-->
@@ -21,7 +22,8 @@
                 {{> playerList}}
               </div>
             </div>
-            {{> nextPhase}}
+          {{else}}
+            <h4 class="center">Please refresh to join the room!</h4>
           {{/if}}
           {{> createRoom}}
         {{/if}}

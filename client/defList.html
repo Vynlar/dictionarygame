@@ -1,12 +1,19 @@
 <template name="defList">
   <ul class="collection">
-    
+
     {{#each definitions}}
       <li class="collection-item">
       <span class="{{hidden}}">{{text}}</span>
         {{#if voting}}
+          <span class="secondary-content black-text text-lighten-2">
+             {{votes.length}}
+          </span>
           {{#if notCurrentUser username}}
-            <span class="badge"><button id="{{username}}" class="voteButton">Vote</button> {{votes.length}}</span>
+           <div class="secondary-content">
+             <a href="javascript:{}" id="{{username}}" class="voteButton">
+               <i class="material-icons">control_point</i>
+             </a>
+           </div>
           {{/if}}
         {{/if}}
       </li>

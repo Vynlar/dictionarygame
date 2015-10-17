@@ -18,8 +18,8 @@ The game is played by two or more individuals. The computer chooses a random wor
 * Write client tests
 * Filter dictionary for difficulty
 * Make skip word button for host (trigger nextPhase twice or new function?)
+* Decide and implement a win system
 
 ### Contributors
 
 * Adrian Aleixandre: [adrianaleixandre.com](http://adrianaleixandre.com)
-
