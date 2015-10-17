@@ -36,12 +36,13 @@ Methods.nextPhase = function(roomId) {
         if(players[j].username == def.username) {
           Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": 2*def.votes.length}});
         }
-        else if(def.username == "server") {
-          for(var k = 0; k < def.votes.length; k++) {
-            Room.update({_id: roomId, "players.username": def.votes[k]}, {$inc: {"players.$.score": 1}});
-          }
-          Room.update({_id: roomId}, {$set: {correctDef: room.word + " - " + def.text}});
+      }
+      if(def.username == "server") {
+        for(var k = 0; k < def.votes.length; k++) {
+          Room.update({_id: roomId, "players.username": def.votes[k]}, {$inc: {"players.$.score": 1}});
         }
+        Room.update({_id: roomId}, {$set: {correctDef: room.word + " - " + def.text}});
+
       }
     }
   }

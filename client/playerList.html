@@ -4,7 +4,7 @@
       <span class="card-title">Players</span>
       <ul class="collection">
         {{#each players}}
-        <li class="collection-item blue darken-2 white-text {{submitted username}}" data-username="{{username}}">
+        <li class="collection-item white-text {{submitted username}}" data-username="{{username}}">
             {{#if isOwner}}
               <i class="material-icons left removePlayer {{hidden username}}" data-username="{{username}}">clear</i>
             {{/if}}

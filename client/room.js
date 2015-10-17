@@ -8,9 +8,11 @@ Template.registerHelper("inRoom", function()  {
   var roomId = Session.get("roomId");
   if(roomId) {
     var room = Room.findOne({_id: roomId});
-    for(var i = 0; i < room.players.length; i++) {
-      if(room.players[i].username == Meteor.user().username) {
-        return true;
+    if(room && room.players) {
+      for(var i = 0; i < room.players.length; i++) {
+        if(room.players[i].username == Meteor.user().username) {
+          return true;
+        }
       }
     }
   }
@@ -68,12 +70,14 @@ Template.playerList.helpers({
   },
   submitted: function(username) {
     var room = Room.findOne({_id: Session.get("roomId")});
-    for(var i = 0; i < room.definitions; i++) {
+    for(var i = 0; i < room.definitions.length; i++) {
+      console.log("looped");
       if(room.definitions[i].username == username) {
+        console.log("ligntened");
         return "blue lighten-1";
       }
     }
-    return "";
+    return "blue darken-2";
   }
 });
 
@@ -116,7 +120,6 @@ Template.defList.helpers({
 var submitDefinition = function(e) {
   e.preventDefault();
   var form = document.getElementById("defForm");
-  console.log(form.definition.value);
 
   Meteor.call("addDefinition", form.definition.value, Session.get("roomId"));
   form.definition.value = "";
