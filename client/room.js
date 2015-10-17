@@ -19,14 +19,16 @@ Template.registerHelper("inRoom", function()  {
   return false;
 });
 
-Meteor.startup(function() {
+var join = function() {
   Session.set("roomId", "");
   if(location.hash !== "" && location.hash !== "#") {
     Session.set("roomId", location.hash.split("#")[1]);
     Meteor.call("joinRoom", Session.get("roomId"));
   }
   Session.set("phase", "writing");
-});
+}
+
+Meteor.startup(join);
 
 Template.correctDef.helpers({
   definition: function() {
@@ -118,6 +120,8 @@ var register = function(e) {
         
       }
       document.getElementById("registerError").innerHTML = output;
+    } else {
+      join();
     }
   });
 };

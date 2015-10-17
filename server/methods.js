@@ -140,7 +140,8 @@ Methods.vote = function(roomId, username) {
       for(var i = 0; i < room.definitions.length; i++) {
         var def = room.definitions[i];
         for(var j = 0; j < def.votes.length; j++) {
-          var user = def.votes[i];
+          var user = def.votes[j];
+          console.log("Comparing " + Meteor.user().username + " to " + user);
           if(Meteor.user().username == user) {
             return;
           }
