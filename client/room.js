@@ -20,6 +20,13 @@ Meteor.startup(function() {
   Session.set("phase", "writing");
 });
 
+Template.correctDef.helpers({
+  definition: function() {
+    var room = Room.findOne({_id: Session.get("roomId")});
+    return room.correctDef;
+  }
+});
+
 Template.word.helpers({
   word: function() {
     var room = Room.findOne({_id: Session.get("roomId")});

@@ -20,6 +20,7 @@ Methods.createRoom = function() {
     word: def.word,
     phase: writingPhase,
     definitions: [Helpers.createDefinition(def, "server")],
+    correctDef: "",
     voted: 0
   });
 };
@@ -38,6 +39,7 @@ Methods.nextPhase = function(roomId) {
         for(var k = 0; k < def.votes.length; k++) {
           Room.update({_id: roomId, "players.username": def.votes[k]}, {$inc: {"players.$.score": 1}});
         }
+        Room.update({_id: roomId}, {$set: {correctDef: def.text}});
       }
     }
   }
