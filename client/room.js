@@ -29,7 +29,10 @@ Meteor.startup(function() {
 Template.correctDef.helpers({
   definition: function() {
     var room = Room.findOne({_id: Session.get("roomId")});
-    return "'" + room.correctDef + "'";
+    if(room.correctDef) {
+      return "'" + room.correctDef + "'";
+    }
+    return "";
   }
 });
 
@@ -62,6 +65,15 @@ Template.playerList.helpers({
   },
   hidden: function(username) {
     return Meteor.user().username == username ? "hidden" : "";
+  },
+  submitted: function(username) {
+    var room = Room.findOne({_id: Session.get("roomId")});
+    for(var i = 0; i < room.definitions; i++) {
+      if(room.definitions[i].username == username) {
+        return "blue lighten-1";
+      }
+    }
+    return "";
   }
 });
 
