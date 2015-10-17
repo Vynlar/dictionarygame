@@ -35,7 +35,7 @@ Methods.nextPhase = function(roomId) {
       if(players[j].username == def.username) {
         Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": 2*def.votes.length}});
       }
-      if(def.username == "server") {
+      else if(def.username == "server") {
         for(var k = 0; k < def.votes.length; k++) {
           Room.update({_id: roomId, "players.username": def.votes[k]}, {$inc: {"players.$.score": 1}});
         }
@@ -45,7 +45,8 @@ Methods.nextPhase = function(roomId) {
   }
 
   room = Helpers.getRoom(roomId);
-  Helpers.checkWin(room);
+  //TODO: decide on a win system
+  //Helpers.checkWin(room);
 
   if(room.phase == writingPhase) {
     Room.update({_id: roomId}, {$set: {phase: votingPhase, voted: 0}});
@@ -127,6 +128,7 @@ Methods.removePlayer = function(roomId, username) {
 };
 
 Methods.vote = function(roomId, username) {
+  console.log(username);
   var room = Helpers.getRoom(roomId);
   if(room) {
     if(Helpers.isPlayerInRoom(room)) {
@@ -139,12 +141,12 @@ Methods.vote = function(roomId, username) {
           }
         }
       }
+      Room.update({_id: roomId, "definitions.username": username},{$push: {"definitions.$.votes": Meteor.user().username}});
+      Room.update({_id: roomId},{$inc: {voted: 1}});
+      if(Helpers.checkVotingEnded(Helpers.getRoom(roomId))) {
+        Meteor.call("nextPhase", roomId);
+      }
     }
-  }
-  Room.update({_id: roomId, "definitions.username": username},{$push: {"definitions.$.votes": Meteor.user().username}});
-  Room.update({_id: roomId},{$inc: {voted: 1}});
-  if(Helpers.checkVotingEnded(Helpers.getRoom(roomId))) {
-    Meteor.call("nextPhase", roomId);
   }
 };
 

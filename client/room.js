@@ -5,10 +5,16 @@ Accounts.ui.config({
 });
 
 Template.registerHelper("inRoom", function()  {
-  if(Session.get("roomId")) {
-    return true;
+  var roomId = Session.get("roomId");
+  if(roomId) {
+    var room = Room.findOne({_id: roomId});
+    for(var i = 0; i < room.players.length; i++) {
+      if(room.players[i].username == Meteor.user().username) {
+        return true;
+      }
+    }
   }
-  else return false;
+  return false;
 });
 
 Meteor.startup(function() {
@@ -60,10 +66,9 @@ Template.playerList.helpers({
 });
 
 Template.defList.events({
-  "click .voteButton": function(def) {
+  "click .voteButton": function(e) {
     // XXX could switch it to use data tags instead of the id
-    var username = def.target.id;
-    console.log(username);
+    var username = e.target.parentElement.id;
     Meteor.call("vote", Session.get("roomId"), username);
   }
 });
@@ -93,20 +98,21 @@ Template.defList.helpers({
     } else {
       return true;
     }
-
   }
 });
 
+var submitDefinition = function(e) {
+  e.preventDefault();
+  var form = document.getElementById("defForm");
+  console.log(form.definition.value);
+
+  Meteor.call("addDefinition", form.definition.value, Session.get("roomId"));
+  form.definition.value = "";
+};
+
 Template.defForm.events({
-  'click #formSubmitButton': function(e) {
-    //e.preventDefault();
-    var form = document.getElementById("defForm");
-    console.log(form.definition.value);
-
-    Meteor.call("addDefinition", form.definition.value, Session.get("roomId"));
-
-    form.definition.value = "";
-  }
+  'submit #defForm': submitDefinition,
+  'click #formSubmitButton': submitDefinition
 });
 
 Template.defForm.helpers({

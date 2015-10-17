@@ -10,7 +10,16 @@ The game is played by two or more individuals. The computer chooses a random wor
 
 [Meteor.js](http://meteor.com) was used because of its easy to impliment multi-user data sharing. This was perfect for creating game rooms and live updates across clients.
 
+### ToDo
+
+* Write custom authentication front-end
+* Trigger joinRoom on login
+* Finish writing tests on server
+* Write client tests
+* Filter dictionary for difficulty
+* Make skip word button for host (trigger nextPhase twice or new function?)
+* Decide and implement a win system
+
 ### Contributors
 
 * Adrian Aleixandre: [adrianaleixandre.com](http://adrianaleixandre.com)
-
