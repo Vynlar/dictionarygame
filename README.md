@@ -23,4 +23,7 @@ The game is played by two or more individuals. The computer chooses a random wor
 ### Contributors
 
 * Adrian Aleixandre: [adrianaleixandre.com](http://adrianaleixandre.com)
+  * Main Development
 * Kolya Venturi: [kolya.co](http://kolya.co)
+  * Data Gathering
+  * General Advice
