@@ -1,5 +1,5 @@
-var writingPhase = "writing";
-var votingPhase = "voting";
+var WRITING_PHASE = "writing";
+var VOTING_PHASE = "voting";
 
 Methods = {};
 
@@ -18,7 +18,7 @@ Methods.createRoom = function() {
     players: [{username: Meteor.user().username, score: 0}],
     owner: Meteor.userId(),
     word: def.word,
-    phase: writingPhase,
+    phase: WRITING_PHASE,
     definitions: [Helpers.createDefinition(def, "server")],
     correctDef: "",
     voted: 0
@@ -29,17 +29,19 @@ Methods.nextPhase = function(roomId) {
   var room = Helpers.getRoom(roomId);
   var players = room.players;
 
-  for(var i = 0; i < room.definitions.length; i++) {
-    var def = room.definitions[i];
-    for(var j = 0; j < players.length; j++) {
-      if(players[j].username == def.username) {
-        Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": 2*def.votes.length}});
-      }
-      else if(def.username == "server") {
-        for(var k = 0; k < def.votes.length; k++) {
-          Room.update({_id: roomId, "players.username": def.votes[k]}, {$inc: {"players.$.score": 1}});
+  if(room.phase == VOTING_PHASE) {
+    for(var i = 0; i < room.definitions.length; i++) {
+      var def = room.definitions[i];
+      for(var j = 0; j < players.length; j++) {
+        if(players[j].username == def.username) {
+          Room.update({_id: roomId, "players.username": def.username}, {$inc: {"players.$.score": 2*def.votes.length}});
         }
-        Room.update({_id: roomId}, {$set: {correctDef: def.text}});
+        else if(def.username == "server") {
+          for(var k = 0; k < def.votes.length; k++) {
+            Room.update({_id: roomId, "players.username": def.votes[k]}, {$inc: {"players.$.score": 1}});
+          }
+          Room.update({_id: roomId}, {$set: {correctDef: room.word + " - " + def.text}});
+        }
       }
     }
   }
@@ -48,11 +50,11 @@ Methods.nextPhase = function(roomId) {
   //TODO: decide on a win system
   //Helpers.checkWin(room);
 
-  if(room.phase == writingPhase) {
-    Room.update({_id: roomId}, {$set: {phase: votingPhase, voted: 0}});
+  if(room.phase == WRITING_PHASE) {
+    Room.update({_id: roomId}, {$set: {phase: VOTING_PHASE, voted: 0}});
   } else {
     var newDef = Helpers.getRandomWord();
-    Room.update({_id: roomId}, {$set: {phase: writingPhase, word: newDef.word, definitions: [Helpers.createDefinition(newDef, "server")]}});
+    Room.update({_id: roomId}, {$set: {phase: WRITING_PHASE, word: newDef.word, definitions: [Helpers.createDefinition(newDef, "server")]}});
   }
 };
 

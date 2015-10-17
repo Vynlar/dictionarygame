@@ -32,7 +32,7 @@ Helpers.getRandomWord = function() {
 };
 
 Helpers.createDefinition = function(word, player) {
-  return {text: word.definition, username: player, votes: []};
+  return {text: word.definition.toLowerCase(), username: player, votes: []};
 };
 
 Helpers.checkVotingEnded = function(room) {
