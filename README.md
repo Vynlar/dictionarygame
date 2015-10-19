@@ -21,6 +21,7 @@ The game is played by two or more individuals. The computer chooses a random wor
 * Stretch Goals
   * Make players auto leave on browser close
   * AFK detection
+  * Add a module-require system
 
 ### Contributors
 
