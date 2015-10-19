@@ -8,10 +8,11 @@ The game is played by two or more individuals. The computer chooses a random wor
 
 ### Technology
 
-[Meteor.js](http://meteor.com) was used because of its easy to impliment multi-user data sharing. This was perfect for creating game rooms and live updates across clients.
+[Meteor.js](http://meteor.com) was used because of its easy to implement multi-user data sharing. This was perfect for creating game rooms and live updates across clients.
 
 ### ToDo
 
+* Make publication only publish the room the player is in
 * Finish writing tests on server
 * Write client tests
 * Filter dictionary for difficulty
