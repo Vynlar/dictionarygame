@@ -1,37 +1,26 @@
 Methods.addDefinition = function(text, roomId) {
   var room = Helpers.getRoom(roomId);
 
-  if(room.phase != WRITING_PHASE) {
-    return;
-  }
+  if(room.phase != WRITING_PHASE) return;
+  if(!Helpers.isPlayerInRoom(room)) return;
 
-  var presentInRoom = false;
-  for(var i = 0; i < room.players.length; i++) {
-    if(room.players[i].username == Meteor.user().username) {
-      presentInRoom = true;
-    }
-  }
-  if(!presentInRoom) return;
-  //returns if a def is already present
-  for(var j = 0; j < room.definitions.length; j++) {
-    if(room.definitions[j].username == Meteor.user().username) {
-      return;
-    }
-  }
+  for(var j = 0; j < room.definitions.length; j++)
+    if(room.definitions[j].username == Meteor.user().username) return;
 
   //make all definitions lower case for consistency
   text = text.toLowerCase();
+  var random = Math.floor(Math.random() * (room.definitions.length+1));
+  console.log(random);
+  room.definitions.splice(
+    random, //index to insert into
+    0, //number of elements to remove
+    { //object to insert
+      text: text,
+      username: Meteor.user().username,
+      votes: []
+    }
+  );
+  Room.update({_id: roomId}, {$set: room});
 
-  Room.update({_id: roomId},
-              {$push: {definitions: {text: text, username: Meteor.user().username, votes: []}}});
-  // XXX
-  room = Helpers.getRoom(roomId);
-  var shuffled = Helpers.shuffle(room.definitions);
-  // XXX
-  if(Helpers.checkDefinitionsEnded(room)) {
-    //Go to voting phase
-    Meteor.call("nextPhase", roomId);
-  }
-  Room.update({_id: roomId},
-              {$set: {definitions: shuffled}});
+  if(Helpers.checkDefinitionsEnded(room)) Meteor.call("nextPhase", roomId);
 };

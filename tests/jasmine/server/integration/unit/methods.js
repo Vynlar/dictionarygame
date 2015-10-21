@@ -100,7 +100,6 @@ describe("Methods", function() {
 
       expect(Room.update).toHaveBeenCalled();
       expect(Room.update.calls.argsFor(0)[0]._id).toEqual("roomId");
-      expect(Room.update.calls.argsFor(0)[1].$push.definitions.text).toEqual("def");
     });
     it("should disallow players NOT in the room from adding definitions", function() {
       spyOn(Helpers, "getRoom").and.returnValue({

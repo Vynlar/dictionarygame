@@ -25,8 +25,8 @@ Methods.vote = function(roomId, username) {
           }
         }
       }
-      Room.update({_id: roomId, "definitions.username": username},{$push: {"definitions.$.votes": Meteor.user().username}});
-      Room.update({_id: roomId},{$inc: {voted: 1}});
+      Room.update({_id: roomId, "definitions.username": username},{$push: {"definitions.$.votes": Meteor.user().username}, $inc: {voted: 1}});
+      //Room.update({_id: roomId},{});
       if(Helpers.checkVotingEnded(Helpers.getRoom(roomId))) {
         Meteor.call("nextPhase", roomId);
       }
