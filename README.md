@@ -13,6 +13,9 @@ The game is played by two or more individuals. The computer chooses a random wor
 ### ToDo
 
 * Make publication only publish the room the player is in
+* Make each method only have one database update
+* Trigger joinRoom on login if the url hash contains a roomId
+* Fix removePlayer behavior
 * Finish writing tests on server
 * Write client tests
 * Filter dictionary for difficulty

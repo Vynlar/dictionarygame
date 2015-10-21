@@ -1,30 +1,35 @@
 Methods.removePlayer = function(roomId, username) {
   var room = Helpers.getRoom(roomId);
-  if(room) {
-    if(room.owner == Meteor.userId()) {
-      //search through the room removing everything about a given player
-      //remove player from array
-      Room.update({_id: roomId}, {$pop: {players: username}});
-      //remove their votes
-      for(var i = 0; i < room.definitions.length; i++) {
-        var def = room.definitions[i];
+  if(room && room.owner == Meteor.userId()) {
+    //remove player from room.players
+    for(var p = 0; p < room.players.length; p++) {
+      if(room.players[p].username == username) {
+        room.players.splice(p, 1);
+      }
+    }
+    //remove their votes
+    for(var i = 0; i < room.definitions.length; i++) {
+      var def = room.definitions[i];
+      if(room.phase == "voting") {
+        //look through all the votes on the current def
         for(var j = 0; j < def.votes.length; j++) {
           //if the player voted
           if(def.votes[j] == username) {
-            Room.update({_id: roomId, "definitions.username": def.username}, {$pop: {"definitions.$.votes": username}});
-            Room.update({_id: roomId}, {$inc: {voted: -1}});
+            room.definitions[i].votes.splice(j, 1);
+            room.voted--;
           }
         }
-        //if the player is the owner of the def
-        if(def.username == username) {
-          Room.update({_id: roomId, "definitions.username": username}, {$pop: {"definitions": username}});
-        }
+      }
+      //if the player is the owner of the current def
+      if(def.username == username) {
+        room.definitions.splice(i, 1);
       }
     }
-    if(Helpers.checkVotingEnded(Helpers.getRoom(roomId))) {
+    Room.update({_id: roomId}, {$set: room});
+    if(room.phase == VOTING_PHASE && Helpers.checkVotingEnded(room)) {
       Meteor.call("nextPhase", roomId);
     }
-    if(Helpers.checkDefinitionsEnded(room)) {
+    if(room.phase == WRITING_PHASE && Helpers.checkDefinitionsEnded(room)) {
       Meteor.call("nextPhase", roomId);
     }
   }

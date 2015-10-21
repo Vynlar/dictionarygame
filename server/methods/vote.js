@@ -4,7 +4,17 @@ Methods.vote = function(roomId, username) {
   }
   var room = Helpers.getRoom(roomId);
   if(room) {
+    if(room.phase != VOTING_PHASE) {
+      return;
+    }
     if(Helpers.isPlayerInRoom(room)) {
+      var playerSubmittedDef = false;
+      for(var k = 0; k < room.definitions.length; k++) {
+        if(Meteor.user().username == room.definitions[k].username) {
+          playerSubmittedDef = true;
+        }
+      }
+      if(!playerSubmittedDef) return;
       for(var i = 0; i < room.definitions.length; i++) {
         var def = room.definitions[i];
         for(var j = 0; j < def.votes.length; j++) {

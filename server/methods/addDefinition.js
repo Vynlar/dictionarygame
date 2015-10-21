@@ -1,6 +1,10 @@
 Methods.addDefinition = function(text, roomId) {
   var room = Helpers.getRoom(roomId);
 
+  if(room.phase != WRITING_PHASE) {
+    return;
+  }
+
   var presentInRoom = false;
   for(var i = 0; i < room.players.length; i++) {
     if(room.players[i].username == Meteor.user().username) {

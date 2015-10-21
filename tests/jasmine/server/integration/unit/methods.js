@@ -90,7 +90,8 @@ describe("Methods", function() {
         players: [
           {username: "vynlar"}
         ],
-        definitions: []
+        definitions: [],
+        phase: WRITING_PHASE
       });
       spyOn(Room, "update");
       spyOn(Meteor, "user").and.returnValue({username: "vynlar"});
@@ -152,7 +153,7 @@ describe("Methods", function() {
       spyOn(Room, "update");
 
       Methods.vote("roomId", "vynlar2");
-      
+
       expect(Room.update).not.toHaveBeenCalled();
     });
     it("should block the player from voting for themself", function() {
@@ -162,7 +163,7 @@ describe("Methods", function() {
       });
       spyOn(Room, "update");
       spyOn(Meteor, "user").and.returnValue({
-        username: "vynlar" 
+        username: "vynlar"
       });
 
       Methods.vote("roomId", "vynlar");
@@ -173,7 +174,7 @@ describe("Methods", function() {
       spyOn(Room, "findOne").and.returnValue({
         players: [{username: "vynlar2"}]
       });
-      
+
       spyOn(Room, "update");
       Methods.vote("roomId", "vynlar");
 
@@ -186,17 +187,17 @@ describe("Methods", function() {
       });
       spyOn(Room, "update");
       spyOn(Meteor, "user").and.returnValue({
-        username: "vynlar" 
+        username: "vynlar"
       });
 
       Methods.vote("roomId", "vynlar2");
-      
+
       expect(Room.update).not.toHaveBeenCalled();
     });
   });
 
   describe("removePlayer():", function() {
-    it("should remove the player, their votes, and their definitions from the room", function() {
+    xit("should remove the player, their votes, and their definitions from the room", function() {
       spyOn(Helpers, "getRoom").and.returnValue({
         players: [{username: "vynlar"},
                   {username: "vynlar2"}],
@@ -204,6 +205,7 @@ describe("Methods", function() {
                       {username: "vynlar2", votes: ["vynlar"]}],
         voted: 1
       });
+
       spyOn(Room, "update");
       spyOn(Meteor, "call");
 
@@ -216,14 +218,46 @@ describe("Methods", function() {
       expect(Room.update).toHaveBeenCalledWith({_id: "roomId"}, {$inc: {voted: -1}});
       expect(Meteor.call).toHaveBeenCalledWith("nextPhase", "roomId");
     });
+    xit("should go to the writing phase if the player was the last person not to submit a def", function() {
+      spyOn(Helpers, "getRoom").and.returnValue({
+        players: [{username: "vynlar"},
+                  {username: "vynlar2"},
+                  {username: "vynlar3"},
+                  {username: "vynlar4"}],
+        definitions: [{username: "vynlar2", votes: []},
+                      {username: "vynlar3", votes: []},
+                      {username: "vynlar4", votes: []}],
+        phase: "writing"
+      });
+      spyOn(Meteor, "call");
+
+      Methods.removePlayer("roomId", "vynlar");
+
+      expect(Meteor.call).toHaveBeenCalledWith("nextPhase", "roomId");
+    });
+    it("should not advance phase if everyone else had not submitted a def", function() {
+      spyOn(Helpers, "getRoom").and.returnValue({
+        players: [{username: "vynlar"},
+                  {username: "vynlar2"},
+                  {username: "vynlar3"},
+                  {username: "vynlar4"}],
+        definitions: [{username: "vynlar2"},
+                      {username: "vynlar3"},
+                      {username: "vynlar4"}],
+        phase: "writing"
+      });
+      spyOn(Meteor, "call");
+
+      fail();
+    });
     xit("should go to the next phase if the kicked player was the only one who had not submitted", function() {
-      fail("Unimplimented");  
+      fail("Unimplimented");
     });
     xit("should go to the next phase if the kicked player was the only one who had not voted", function() {
-      fail("Unimplimented");  
+      fail("Unimplimented");
     });
     xit("should only let the owner of the room kick", function() {
-      fail("Unimplimented");  
+      fail("Unimplimented");
     });
   });
 });
