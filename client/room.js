@@ -87,6 +87,7 @@ var login = function(e) {
   var username = form.username.value;
   var password = form.password.value;
   Meteor.loginWithPassword(username, password, function(error) {
+    if(!error) return join();
     console.log(error);
     var output = "";
     switch(error.error) {

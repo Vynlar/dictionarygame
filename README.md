@@ -9,6 +9,7 @@ The game is played by two or more individuals. The computer chooses a random wor
 ### Technology
 
 [Meteor.js](http://meteor.com) was used because of its easy to implement multi-user data sharing. This was perfect for creating game rooms and live updates across clients.
+
 [Materialize](http://materializecss.com/) is used as the front-end css framework because of easy to use, clean design it offers.
 
 ### ToDo
