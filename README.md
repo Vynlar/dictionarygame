@@ -12,7 +12,6 @@ The game is played by two or more individuals. The computer chooses a random wor
 
 ### ToDo
 
-* Make publication only publish the room the player is in
 * Make each method only have one database update
 * Trigger joinRoom on login if the url hash contains a roomId
 * Fix removePlayer behavior
@@ -31,6 +30,4 @@ The game is played by two or more individuals. The computer chooses a random wor
 * Adrian Aleixandre: [adrianaleixandre.com](http://adrianaleixandre.com)
   * Main Development
 * Kolya Venturi: [kolya.co](http://kolya.co)
-  * Data Gathering
-  * General Advice
-  * Wrote Tests
+  * Gathered Word Data
