@@ -14,16 +14,17 @@ The game is played by two or more individuals. The computer chooses a random wor
 
 * Make each method only have one database update
 * Trigger joinRoom on login if the url hash contains a roomId
-* Fix removePlayer behavior
 * Finish writing tests on server
 * Write client tests
 * Filter dictionary for difficulty
 * Make skip word button for host (trigger nextPhase twice or new function?)
 * Decide and implement a win system
-* Stretch Goals
-  * Make players auto leave on browser close
-  * AFK detection
-  * Add a module-require system
+
+### Stretch Goals
+
+* Make players auto leave on browser close
+* AFK detection
+* Add a module-require system
 
 ### Contributors
 
