@@ -26,7 +26,7 @@ var join = function() {
     Meteor.call("joinRoom", Session.get("roomId"));
   }
   Session.set("phase", "writing");
-}
+};
 
 Meteor.startup(join);
 
@@ -118,7 +118,7 @@ var register = function(e) {
     if(error) {
       var output = error.reason;
       switch(error.error) {
-        
+
       }
       document.getElementById("registerError").innerHTML = output;
     } else {
@@ -230,7 +230,14 @@ Template.phase.helpers({
 
 Template.nextPhase.events({
   'click .nextPhaseButton': function(e) {
-    Meteor.call("nextPhase", Session.get("roomId"));
+    var roomId = Session.get("roomId");
+    var room = Room.findOne({_id: roomId});
+    if(room.phase == "writing") {
+      for(var i = 0; i < 2; i ++)
+        Meteor.call("nextPhase", roomId);
+    } else {
+      Meteor.call("nextPhase", roomId);
+    }
   }
 });
 
